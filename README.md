@@ -86,6 +86,51 @@ autoscab fredmeyer -n 3 --leaveopen
 
 ## Changelog
 
+## 0.3.0
+
+- Added `starbucks` deployment
+- new `Locator` structure that includes action-types and ability to refer to 
+  fields in the `identity` object, so one can make a locator like:
+
+```python
+from autoscab.locators import Locator, Location
+from selenium.webdriver.common.by import By
+
+my_locator = Locator(locations={
+  'my_location': Location(
+      By.XPATH,
+      '<some-xpath>',
+      'send_keys',
+      '{first_name}'
+  ),
+  'a_button': Location(
+      By.XPATH,
+      '<another-xpath>',
+      'click'
+  )
+})
+```
+
+and then use them in the `PostBot` like
+```python
+self.execute(['my_location', 'a_button'])
+```
+
+- `Deployment`s now have `active_dates` which are pprinted in the console like
+```
+--------------------------------------------------------------------------------
+Autoscab Deployments (0.3.0)
+starbucks - [ ACTIVE ]   22-01-16 - (indefinite)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fredmeyer - [ INACTIVE ] 21-12-01 - 21-12-31
+--------------------------------------------------------------------------------
+```
+
+- added ability to specify university in resume maker, pending a fuller rewrite
+- `identity` objects have new fields: dob, age, username, university, degree, company, job
+- `PostBots` should now have a `confirm` method, though it is not enforced yet by ABC, that lets you make sure you actually submit an app instead of 
+  just running indefinitely doing nothing.
+
 ## 0.2.2
 
 - Default to "random" email using Faker().free_email() when email confirmation is not required

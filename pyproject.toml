@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autoscab"
-version = "0.2.2"
+version = "0.3.0"
 description = "apply for many of the same job"
 authors = ["sneakers-the-rat"]
 license = "unlicense"

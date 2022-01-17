@@ -8,8 +8,12 @@ from autoscab.constants.resume import degrees, unis
 
 faker = Faker()
 
-def make_resume(name:str, email:str, suffix:str = 'resume', prefix:str='') -> Path:
+def make_resume(name:str, email:str, suffix:str = 'resume', prefix:str='', uni=None, degree=None) -> Path:
     year = date.today().year
+    if uni is None:
+        uni = random.choice(unis)
+    if degree is None:
+        degree = random.choice(degrees)
 
     font_face = random.choice(['Helvetica', 'Times'])
 
@@ -38,12 +42,12 @@ def make_resume(name:str, email:str, suffix:str = 'resume', prefix:str='') -> Pa
     pdf.ln(int(header_bigfont*0.25))
 
     pdf.set_font(font_face, '', int(header_bigfont*0.55))
-    pdf.cell(w=0, txt=random.choice(unis), align='L')
+    pdf.cell(w=0, txt=uni, align='L')
     pdf.cell(w=0, txt=str(grad_year-4)+' - '+str(grad_year), align='R')
     pdf.ln(int(header_bigfont*0.25))
 
     pdf.set_font(font_face, 'I', int(header_bigfont*0.55))
-    pdf.cell(w=0, txt=random.choice(degrees), align='L')
+    pdf.cell(w=0, txt=degree, align='L')
     pdf.ln(int(header_bigfont*0.5))
 
     ## Experience

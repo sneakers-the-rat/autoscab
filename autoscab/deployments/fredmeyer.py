@@ -1,9 +1,10 @@
 import time
 import random
 import datetime
+from datetime import date
 import pdb
 from autoscab.deployments.deployment import Deployment
-from autoscab.constants.locators import FredMeyerLocator
+from autoscab.locators.fredmeyer import FredMeyerLocator
 from autoscab.constants.common import NOS, NAS
 from autoscab.postbot import PostBot
 from autoscab.constants.location import load_cities
@@ -171,5 +172,6 @@ FredMeyerDeployment = Deployment(
     name="fredmeyer",
     urls=['https://kroger.eightfold.ai/careers?query=1976116&domain=kroger.com&location_distance_km=100&messenger=email'],
     locators=dict(FredMeyerLocator.__dict__),
-    postbot=FredMeyerPostbot
+    postbot=FredMeyerPostbot,
+    active_dates=(date(2021,12,1), date(2021,12,31))
 )

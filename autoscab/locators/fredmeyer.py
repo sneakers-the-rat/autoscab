@@ -1,4 +1,5 @@
 from selenium.webdriver.common.by import By
+from autoscab.locators import Locator
 
 class FredMeyerLocator:
     # login stuff

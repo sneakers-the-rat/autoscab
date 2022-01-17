@@ -4,7 +4,7 @@ import sys
 from autoscab.deployments import Deployment
 from autoscab.constants import colors
 
-parser = argparse.ArgumentParser("APPLY FOR MANY OF THE SAME JOB", epilog="IF THEY WANT SCABS, WE'LL GIVE EM SCABS")
+parser = argparse.ArgumentParser("autoscab", epilog="IF THEY WANT SCABS, WE'LL GIVE EM SCABS")
 
 parser.add_argument('deployment', help="Which deployment to run", default='', nargs='?')
 parser.add_argument('--email', help="Which method of email generation to use",
@@ -15,11 +15,12 @@ parser.add_argument('--list', action="store_true", help="List all available depl
 parser.add_argument('--noheadless', action="store_false",help="Show the chromium driver as it fills in the application")
 parser.add_argument('--leaveopen', action="store_true", help="Try to leave the browser open after an application is completed")
 
+
 def main():
     args = parser.parse_args()
 
     if args.list:
-        pprint.pprint(list(Deployment.get_deployments().keys()))
+        Deployment.print_deployments()
         sys.exit(0)
 
     headless = args.noheadless
@@ -34,14 +35,14 @@ def main():
     if args.relentless:
         while True:
             bot = deployment.make(headless=headless, identity_args=identity_args)
-            bot.apply()
+            success = bot.apply()
             bot.quit(args.leaveopen)
 
     else:
         for i in range(args.n):
             print(colors.GREEN + '-' * 50 + f'\n    applying for job #{i}/{args.n}\n' + '-' * 50 + colors.RESET)
             bot = deployment.make(headless=headless)
-            bot.apply()
+            success = bot.apply()
             bot.quit(args.leaveopen)
 
 if __name__ == "__main__":

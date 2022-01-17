@@ -15,11 +15,12 @@ parser.add_argument('--list', action="store_true", help="List all available depl
 parser.add_argument('--noheadless', action="store_false",help="Show the chromium driver as it fills in the application")
 parser.add_argument('--leaveopen', action="store_true", help="Try to leave the browser open after an application is completed")
 
+
 def main():
     args = parser.parse_args()
 
     if args.list:
-        pprint.pprint(list(Deployment.get_deployments().keys()))
+        Deployment.print_deployments()
         sys.exit(0)
 
     headless = args.noheadless
@@ -34,14 +35,14 @@ def main():
     if args.relentless:
         while True:
             bot = deployment.make(headless=headless, identity_args=identity_args)
-            bot.apply()
+            success = bot.apply()
             bot.quit(args.leaveopen)
 
     else:
         for i in range(args.n):
             print(colors.GREEN + '-' * 50 + f'\n    applying for job #{i}/{args.n}\n' + '-' * 50 + colors.RESET)
             bot = deployment.make(headless=headless)
-            bot.apply()
+            success = bot.apply()
             bot.quit(args.leaveopen)
 
 if __name__ == "__main__":

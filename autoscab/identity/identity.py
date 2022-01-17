@@ -11,11 +11,12 @@ from faker import Faker
 from autoscab.identity.resume import make_resume
 from autoscab.constants.agents import USER_AGENTS
 from autoscab.utils import random_email
+from autoscab.constants.resume import degrees, unis
 
 MAIL_SERVICES = typing.Literal['guerilla', 'mailtm', 'random']
 
 class Identity:
-    def __init__(self, email_service:MAIL_SERVICES = 'random', age_range = (21,65)):
+    def __init__(self, email_service:MAIL_SERVICES = 'random', age_range = (21,65), **kwargs):
         self.email_service = email_service
 
         self.faker = Faker()
@@ -24,14 +25,14 @@ class Identity:
         self.first_name, self.last_name = self.name[0], self.name[1]
 
         # Age
-        self.dob = self.faker.date_of_birth(age_range[0], age_range[1]) # type: date
+        self.dob = self.faker.date_of_birth(minimum_age=age_range[0], maximum_age=age_range[1]) # type: date
         self.age = floor((date.today() - self.dob).days / 365)
 
         self.username = f"{self.first_name}{self.last_name}{self.dob.year}_{randint(0,10000)}"
 
 
-
-        self.password = self.get_password()
+        password_kwargs = kwargs.get('password', {})
+        self.password = self.faker.password(**password_kwargs)
         self.ssn = self.faker.ssn()
         phone = ''
         while len(phone)<1 or len(phone)>12:
@@ -48,6 +49,11 @@ class Identity:
         email = self.get_email(self.email_service)
         self.email = email['email']
         self.email_sid = email['sid']
+
+        self.university = random.choice(unis)
+        self.degree = random.choice(degrees)
+        self.company = self.faker.company()
+        self.job = self.faker.job()
 
         self.resume = self.get_resume()
 
@@ -83,5 +89,7 @@ class Identity:
     def get_resume(self) -> Path:
         return make_resume(
             name = " ".join(self.name),
-            email = self.email
+            email = self.email,
+            uni=self.university,
+            degree=self.degree
         )

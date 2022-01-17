@@ -22,6 +22,12 @@ from autoscab.locators import Locator
 
 class PostBot(ABC):
 
+    identity_args = None
+    """
+    Subclasses can specify kwargs to pass on to the identity instance
+    rather than passing as an argument.
+    """
+
     def __init__(self,
                  url:str,
                  locator_dict: typing.Union[dict, Locator],
@@ -30,8 +36,12 @@ class PostBot(ABC):
                  headless:bool=True):
 
         self._tracebacks = True
-        if identity_args is None:
-            identity_args = {}
+
+        if self.identity_args is None:
+            self.identity_args = {}
+
+        if identity_args is not None:
+            self.identity_args.update(identity_args)
 
         self.logger = init_logger('postbot')
         if isinstance(locator_dict, dict):
@@ -45,7 +55,7 @@ class PostBot(ABC):
 
         # initialize identity, if none given
         if identity is None:
-            self.identity = Identity(**identity_args)
+            self.identity = Identity(**self.identity_args)
         elif isinstance(identity, Identity):
             self.identity = identity
         else:
@@ -83,12 +93,12 @@ class PostBot(ABC):
         pass
 
     @abstractmethod
-    def apply(self):
+    def apply(self) -> bool:
         """
         All deployments need to have an 'apply' method that, when called, does the application!
         """
 
-    def random_sleep(self, min=0.25, max=1):
+    def random_sleep(self, min=0.05, max=0.25):
         time.sleep(random.random()*(max-min)+min)
 
     def sleep_until_clickable(self, element:str, timeout:int=10):
@@ -111,6 +121,42 @@ class PostBot(ABC):
         except Exception as e:
             self.logger.failure(f'Couldnt delete resume file, got error {e}')
         self.browser.quit()
+
+    def execute(self, actions:typing.List[str]):
+        """
+        Execute a series of actions specified by Locators.
+
+        Args:
+            actions (list): A list of strings that correspond to locators with actions associated with them!
+        """
+        for action in actions:
+            # get the action from the locator
+            loc = self.locator.locations[action]
+
+            element = getattr(self, action)
+            if loc.action == 'click':
+                element.click()
+            elif loc.action == "send_keys":
+                if loc.value.startswith('{') and loc.value.endswith('}'):
+                    # get value from identity
+                    value = getattr(self.identity, loc.value.lstrip('{').rstrip('}'))
+                else:
+                    value = loc.value
+
+                element.send_keys(value)
+
+            else:
+                raise ValueError(f"Dont know how to execute action type {loc.action}")
+
+            self.random_sleep()
+
+    def print_feedback(self, success:bool):
+        """Preformatted string to indicate success or failure"""
+        if success:
+            self.logger.info("Application submitted and confirmation was successful")
+        else:
+            self.logger.exception("Was not able to confirm app success! Run again with --noheadless to debug")
+
 
     def _find_element(self, *loc):
         return self.browser.find_element(*loc)

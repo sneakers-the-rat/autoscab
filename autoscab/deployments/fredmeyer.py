@@ -3,7 +3,7 @@ import random
 import datetime
 import pdb
 from autoscab.deployments.deployment import Deployment
-from autoscab.constants.locators import FredMeyerLocator
+from autoscab.locators.fredmeyer import FredMeyerLocator
 from autoscab.constants.common import NOS, NAS
 from autoscab.postbot import PostBot
 from autoscab.constants.location import load_cities

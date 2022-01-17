@@ -16,6 +16,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from autoscab.identity.identity import Identity
 from autoscab.logger import init_logger
+from autoscab.locators import Locator
 
 
 
@@ -23,7 +24,7 @@ class PostBot(ABC):
 
     def __init__(self,
                  url:str,
-                 locator_dict:dict,
+                 locator_dict: typing.Union[dict, Locator],
                  identity:typing.Optional[Identity] = None,
                  identity_args:typing.Optional[dict] = None,
                  headless:bool=True):
@@ -33,7 +34,13 @@ class PostBot(ABC):
             identity_args = {}
 
         self.logger = init_logger('postbot')
-        self.locator_dictionary = dict(locator_dict)
+        if isinstance(locator_dict, dict):
+            self.locator_dictionary = dict(locator_dict)
+            self.locator = None
+        elif isinstance(locator_dict, Locator):
+            self.locator = locator_dict
+            self.locator_dictionary = locator_dict.postbot_dict
+
         self.options = Options()
 
         # initialize identity, if none given

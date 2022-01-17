@@ -4,7 +4,7 @@ import sys
 from autoscab.deployments import Deployment
 from autoscab.constants import colors
 
-parser = argparse.ArgumentParser("APPLY FOR MANY OF THE SAME JOB", epilog="IF THEY WANT SCABS, WE'LL GIVE EM SCABS")
+parser = argparse.ArgumentParser("autoscab", epilog="IF THEY WANT SCABS, WE'LL GIVE EM SCABS")
 
 parser.add_argument('deployment', help="Which deployment to run", default='', nargs='?')
 parser.add_argument('--email', help="Which method of email generation to use",

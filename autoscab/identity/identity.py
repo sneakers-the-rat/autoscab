@@ -1,6 +1,9 @@
 import typing
 from pathlib import Path
 import random
+from datetime import date
+from math import floor
+from random import randint
 
 import requests
 from faker import Faker
@@ -12,12 +15,22 @@ from autoscab.utils import random_email
 MAIL_SERVICES = typing.Literal['guerilla', 'mailtm', 'random']
 
 class Identity:
-    def __init__(self, email_service:MAIL_SERVICES = 'random'):
+    def __init__(self, email_service:MAIL_SERVICES = 'random', age_range = (21,65)):
         self.email_service = email_service
 
         self.faker = Faker()
 
         self.name = self.get_name()
+        self.first_name, self.last_name = self.name[0], self.name[1]
+
+        # Age
+        self.dob = self.faker.date_of_birth(age_range[0], age_range[1]) # type: date
+        self.age = floor((date.today() - self.dob).days / 365)
+
+        self.username = f"{self.first_name}{self.last_name}{self.dob.year}_{randint(0,10000)}"
+
+
+
         self.password = self.get_password()
         self.ssn = self.faker.ssn()
         phone = ''

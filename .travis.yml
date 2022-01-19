@@ -1,0 +1,29 @@
+language: python
+
+os:
+  - linux
+  - osx
+  - windows
+
+python:
+  - "3.7"
+  - "3.8"
+  - "3.9"
+
+branches:
+  only:
+    - main
+
+pre_install:
+  - pip install --upgrade pip
+  - pip install --upgrade poetry
+
+install:
+  - poetry install -E tests
+
+script:
+  - pytest --cov=autopilot --cov-config=.coveragerc --cov-report term-missing tests
+
+after_script:
+  - coverage combine --append
+  - coveralls

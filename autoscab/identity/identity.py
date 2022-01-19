@@ -4,6 +4,7 @@ import random
 from datetime import date
 from math import floor
 from random import randint
+import warnings
 
 import requests
 from faker import Faker
@@ -93,3 +94,17 @@ class Identity:
             uni=self.university,
             degree=self.degree
         )
+
+    def __del__(self):
+        """
+        On deletion, try to delete our resume
+        """
+        if hasattr(self, 'resume') and isinstance(self.resume, Path):
+            if self.resume.exists():
+                try:
+                    self.resume.unlink()
+                except Exception as e:
+                    warnings.warn(f'Could not delete resume file, got exception: {e}')
+
+
+

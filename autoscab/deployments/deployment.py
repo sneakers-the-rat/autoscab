@@ -61,11 +61,21 @@ class Deployment:
         self.deployments.append(self)
 
     @classmethod
-    def get_deployments(cls) -> typing.Dict[str, 'Deployment']:
+    def get_deployments(cls, active:typing.Optional[bool]=None) -> typing.Dict[str, 'Deployment']:
         """
-        Return a dictionary of declared Deployment objects, with their `name`s as keys
+        Return a dictionary of declared Deployment objects, with their `name`s as keys.
+
+
+        Args:
+            active (bool): If ``None``, return all. If ``True`` or ``False``, only return
+                active or inactive deployments, respectively, depending on ``active_dates``
         """
-        deploys = {deploy.name: deploy for deploy in cls.deployments}
+        if active is None:
+            deploys = {deploy.name: deploy for deploy in cls.deployments}
+        elif active:
+            deploys = {deploy.name: deploy for deploy in cls.deployments if deploy.active}
+        else:
+            deploys = {deploy.name: deploy for deploy in cls.deployments if not deploy.active}
         return deploys
 
     @classmethod

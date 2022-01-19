@@ -4,6 +4,12 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
+import sys
+if sys.version_info.minor >= 8:
+    from typing import Literal
+else:
+    from typing_extensions import Literal
+
 from autoscab.constants.colors import GREEN, RESET, RED
 
 
@@ -17,7 +23,7 @@ class ValenceLogger(Logger):
         logstr = RED + "[ SUCCESS ] " + message + RESET
         self.info(logstr)
 
-LOGLEVELS = typing.Literal[DEBUG, INFO, WARNING, ERROR]
+LOGLEVELS = Literal[DEBUG, INFO, WARNING, ERROR]
 
 def init_logger(name:str="autoscab", loglevel:LOGLEVELS = INFO) -> ValenceLogger:
     logdir = Path().home() / 'autoscab'

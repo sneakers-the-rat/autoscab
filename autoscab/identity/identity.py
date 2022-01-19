@@ -14,7 +14,13 @@ from autoscab.constants.agents import USER_AGENTS
 from autoscab.utils import random_email
 from autoscab.constants.resume import degrees, unis
 
-MAIL_SERVICES = typing.Literal['guerilla', 'mailtm', 'random']
+import sys
+if sys.version_info.minor >= 8:
+    from typing import Literal
+else:
+    from typing_extensions import Literal
+
+MAIL_SERVICES = Literal['guerilla', 'mailtm', 'random']
 
 class Identity:
     def __init__(self, email_service:MAIL_SERVICES = 'random', age_range = (21,65), **kwargs):

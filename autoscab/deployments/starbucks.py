@@ -209,7 +209,7 @@ class StarbucksPostBot(PostBot):
     def fill_disability(self):
 
         self.dis_name.send_keys(" ".join(self.identity.name))
-        self.dis_date.send_keys(date.today().strftime('%m/%d%/%y'))
+        self.dis_date.send_keys(date.today().strftime('%m/%d/%y'))
         random.choice([self.dis_no, self.dis_no_answer]).click()
         self.dis_continue.click()
         self.sleep_until_clickable('tax_open')

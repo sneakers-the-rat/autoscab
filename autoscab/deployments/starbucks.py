@@ -194,7 +194,7 @@ class StarbucksPostBot(PostBot):
         self.eeo_no_protected.click()
         random.choice([self.eeo_female, self.eeo_male, self.eeo_nogender]).click()
 
-        latino = random.choice([self.eeo_latino, self.eeo_nolatino, self.noinfolatino])
+        latino = random.choice([self.eeo_latino, self.eeo_nolatino, self.eeo_noinfolatino])
         latino.click()
 
         if latino == self.eeo_latino:

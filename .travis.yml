@@ -22,7 +22,7 @@ install:
   - poetry install -E tests
 
 script:
-  - pytest --cov=autopilot --cov-config=.coveragerc --cov-report term-missing tests
+  - pytest --cov=autoscab --cov-config=.coveragerc --cov-report term-missing tests
 
 after_script:
   - coverage combine --append

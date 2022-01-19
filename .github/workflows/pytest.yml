@@ -21,8 +21,4 @@ jobs:
       - name: Install autoscab
         run: pip install .[tests]
       - name: Run tests
-        run: |
-          pytest --cov=autoscab --cov-config=.coveragerc --cov-report term-missing tests
-      - run: coverage combine --append
-      - name: Report Coverage
-        run: coveralls
+        run: pytest tests

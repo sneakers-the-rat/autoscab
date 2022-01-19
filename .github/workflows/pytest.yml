@@ -2,7 +2,7 @@ name: pytest
 on: push
 
 jobs:
-  test:
+  pytest:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,11 +18,10 @@ jobs:
       - name: Install Poetry
         run: |
           python -m pip install --upgrade pip poetry
-      - name: Install autoscab
-        run: |
-          poetry install -E tests
       - name: Run tests
         run: |
+          poetry shell
+          poetry install -E tests
           pytest --cov=autoscab --cov-config=.coveragerc --cov-report term-missing tests
       - run: coverage combine --append
       - name: Report Coverage

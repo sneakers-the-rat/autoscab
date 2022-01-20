@@ -14,7 +14,9 @@ parser.add_argument('--relentless', action="store_true", help="Keep applying for
 parser.add_argument('--list', action="store_true", help="List all available deployments and exit")
 parser.add_argument('--noheadless', action="store_false",help="Show the chromium driver as it fills in the application")
 parser.add_argument('--leaveopen', action="store_true", help="Try to leave the browser open after an application is completed")
-
+parser.add_argument('--driver', choices=['chrome', 'firefox', 'edge', 'ie', 'chromium'],
+                    help="Choose which browser to use (default chrome), if the browser is not found, the postbot will try until it finds one",
+                    default='chrome')
 
 def main():
     args = parser.parse_args()
@@ -34,7 +36,7 @@ def main():
 
     if args.relentless:
         while True:
-            bot = deployment.make(headless=headless, identity_args=identity_args)
+            bot = deployment.make(headless=headless, identity_args=identity_args, driver=args.driver)
             success = bot.apply()
             bot.quit(args.leaveopen)
 

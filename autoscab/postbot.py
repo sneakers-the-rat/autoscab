@@ -8,16 +8,35 @@ from abc import ABC, abstractmethod
 import requests
 
 from selenium import webdriver
-from selenium.common.exceptions import StaleElementReferenceException, TimeoutException
-from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import StaleElementReferenceException, TimeoutException, WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+from webdriver_manager.utils import ChromeType
+
+
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.ie.options import Options as IEOptions
+from selenium.webdriver.opera.options import Options as OperaOptions
+
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager as FirefoxDriverManager
+from webdriver_manager.microsoft import IEDriverManager
+from webdriver_manager.microsoft import EdgeChromiumDriverManager as EdgeDriverManager
+from webdriver_manager.opera import OperaDriverManager
+
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.edge.service import Service as EdgeService
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.ie.service import Service as IEService
 
 from autoscab.identity.identity import Identity
 from autoscab.logger import init_logger
 from autoscab.locators import Locator
 
+BROWSER_DRIVERS = ('chrome', 'firefox', 'ie', 'edge', 'chromium')
 
 
 class PostBot(ABC):
@@ -29,11 +48,29 @@ class PostBot(ABC):
     """
 
     def __init__(self,
-                 url:str,
-                 locator_dict: typing.Union[dict, Locator],
+                 url:typing.Optional[str] = None,
+                 locator_dict: typing.Union[dict, Locator]=None,
                  identity:typing.Optional[Identity] = None,
                  identity_args:typing.Optional[dict] = None,
-                 headless:bool=True):
+                 headless:bool=True,
+                 driver:str='chrome'):
+        """
+
+        Args:
+            url ():
+            locator_dict ():
+            identity ():
+            identity_args ():
+            headless ():
+            driver (str): one of 'chrome' (default), 'chromium', 'firefox', 'ie', 'edge', or 'opera'
+                Each needs to have the relevant browser installed.
+                If we fail to get the requested driver, we'll try all the others
+                until we find one that works. see :meth:`.get_browser`
+        """
+        self._driver = driver
+        self.headless = headless
+        self.url = url
+        self.timeout = 5
 
         self._tracebacks = True
 
@@ -50,8 +87,8 @@ class PostBot(ABC):
         elif isinstance(locator_dict, Locator):
             self.locator = locator_dict
             self.locator_dictionary = locator_dict.postbot_dict
-
-        self.options = Options()
+        else:
+            raise ValueError(f'Cant handle locator dict {locator_dict}, needs to be a dictionary or Locator object')
 
         # initialize identity, if none given
         if identity is None:
@@ -61,25 +98,13 @@ class PostBot(ABC):
         else:
             raise ValueError('identity must be an Identity object!')
 
-        self.options.add_argument("disable-infobars")
-        self.options.add_argument("--disable-dev-shm-usage") #// overcome limited resource problems
-        # self.options.add_argument("--no-sandbox") #// Bypass OS security model
-
-        if headless:
-            self.options.add_argument("--headless")
-
-        # vary window size slightly to avoid obvious fingerprinting
-        width, height = random.randint(1800,1920), random.randint(900, 1080)
-        self.options.add_argument(f"--window-size={width},{height}")
-
-        self.url = url
-        self.browser = webdriver.Chrome(ChromeDriverManager().install(), options=self.options)  # export PATH=$PATH:/path/to/chromedriver/folder
-        self.timeout = 5
+        self.browser = self.get_browser(self._driver)
 
         self.logger.info('Created webdriver, loading first page')
         self.logger.debug(f'First page is {self.url}')
 
-        self.browser.get(self.url)
+        if self.url is not None:
+            self.browser.get(self.url)
 
         self.__postinit__()
 
@@ -92,7 +117,97 @@ class PostBot(ABC):
         """
         pass
 
-    @abstractmethod
+    def get_browser(self, driver:str) -> RemoteWebDriver:
+        """
+        Wrapper around :meth:`._get_browser` that tried to get the requested browser,
+        and failing that gets the one that works.
+
+        Args:
+            driver ():
+
+        Returns:
+
+        """
+        browser = None
+        # first try and get the requested driver
+        try:
+            browser = self._get_browser(driver)
+        except (WebDriverException, TypeError):
+            self.logger.exception(f'Could not find browser for {driver}, trying other browsers')
+            to_try = [d for d in BROWSER_DRIVERS if d != driver]
+            for new_driver in to_try:
+                self.logger.info(f'Trying driver type {new_driver}')
+                try:
+                    browser = self._get_browser(new_driver)
+                    self._driver = new_driver
+                    self.logger.info(f"Success, using {new_driver}")
+                    break
+                except (WebDriverException, TypeError):
+                    self.logger.exception(f'Couldnt find browser {new_driver}')
+
+        if browser is None:
+            raise WebDriverException(f"Could not find any browsers on your system! Try firefox!")
+
+        return browser
+
+    def _get_browser(self, driver:str) -> RemoteWebDriver:
+        """
+        Individual function that tries to get a particular browser, and failing that returns the exception.
+
+        Args:
+            driver ():
+
+        Returns:
+
+        """
+
+        if driver == 'chrome':
+            options = ChromeOptions()
+            manager = ChromeDriverManager().install()
+            # why did i do it this getattr way again...
+            driver = webdriver.Chrome
+            service = ChromeService
+        elif driver == 'chromium':
+            options = ChromeOptions()
+            manager = ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+            driver = webdriver.Chrome
+            service = ChromeService
+        elif driver == 'firefox':
+            options = FirefoxOptions()
+            manager = FirefoxDriverManager().install()
+            driver = webdriver.Firefox
+            service = FirefoxService
+        elif driver == 'ie':
+            options = IEOptions()
+            manager = IEDriverManager().install()
+            driver  = webdriver.Ie
+            service = IEService
+        elif driver == 'edge':
+            options = EdgeOptions()
+            manager = EdgeDriverManager().install()
+            driver = webdriver.Edge
+            service = EdgeService
+        else:
+            raise ValueError(f'Dont know how to handle driver type {driver}, need one of {BROWSER_DRIVERS}')
+
+        # add common options!
+        options.add_argument("--disable-dev-shm-usage") #// overcome limited resource problems
+        # self.options.add_argument("--no-sandbox") #// Bypass OS security model
+
+        if self.headless:
+            options.add_argument("--headless")
+
+        # vary window size slightly to avoid obvious fingerprinting
+        width, height = random.randint(1800,1920), random.randint(900, 1080)
+        options.add_argument(f"--window-size={width},{height}")
+
+        _service = service(executable_path=manager)
+        browser = driver(service=_service, options=options)
+
+        # sometimes window size isn't accepted by options, set it here
+        browser.set_window_size(width, height)
+        return browser
+
     def apply(self) -> bool:
         """
         All deployments need to have an 'apply' method that, when called, does the application!

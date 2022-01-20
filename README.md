@@ -85,6 +85,9 @@ autoscab fredmeyer -n 3 --leaveopen
 **TODO!**
 
 ## Changelog
+## 0.3.2
+
+- Added support for other browsers!
 
 ## 0.3.0
 

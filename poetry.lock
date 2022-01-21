@@ -213,14 +213,6 @@ python-versions = "*"
 
 [[package]]
 name = "numpy"
-version = "1.21.5"
-description = "NumPy is the fundamental package for array computing with Python."
-category = "main"
-optional = false
-python-versions = ">=3.7,<3.11"
-
-[[package]]
-name = "numpy"
 version = "1.22.1"
 description = "NumPy is the fundamental package for array computing with Python."
 category = "main"
@@ -475,6 +467,25 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "stem"
+version = "1.8.0"
+description = "Stem is a Python controller library that allows applications to interact with Tor (https://www.torproject.org/)."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "tbselenium"
+version = "0.6.2"
+description = "Tor Browser automation with Selenium"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+selenium = ">=4"
+
+[[package]]
 name = "text-unidecode"
 version = "1.3"
 description = "The most basic Text::Unidecode port"
@@ -497,6 +508,22 @@ description = "A lil' TOML parser"
 category = "main"
 optional = true
 python-versions = ">=3.7"
+
+[[package]]
+name = "tqdm"
+version = "4.62.3"
+description = "Fast, Extensible Progress Meter"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+dev = ["py-make (>=0.1.0)", "twine", "wheel"]
+notebook = ["ipywidgets (>=6)"]
+telegram = ["requests"]
 
 [[package]]
 name = "trio"
@@ -597,7 +624,7 @@ tests = ["pytest", "pytest-cov", "coveralls"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<4"
-content-hash = "c5439ca8c1f68ddc60a6f12bddb93d923af45826e6b85a4f2c88606020053ae9"
+content-hash = "262800932b380e986cec8fe637eebbfced89ff9fffd15ba838b9949c6a075a29"
 
 [metadata.files]
 async-generator = [
@@ -784,36 +811,6 @@ iniconfig = [
     {file = "iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
 ]
 numpy = [
-    {file = "numpy-1.21.5-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:301e408a052fdcda5cdcf03021ebafc3c6ea093021bf9d1aa47c54d48bdad166"},
-    {file = "numpy-1.21.5-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:a7e8f6216f180f3fd4efb73de5d1eaefb5f5a1ee5b645c67333033e39440e63a"},
-    {file = "numpy-1.21.5-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:fc7a7d7b0ed72589fd8b8486b9b42a564f10b8762be8bd4d9df94b807af4a089"},
-    {file = "numpy-1.21.5-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:58ca1d7c8aef6e996112d0ce873ac9dfa1eaf4a1196b4ff7ff73880a09923ba7"},
-    {file = "numpy-1.21.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dc4b2fb01f1b4ddbe2453468ea0719f4dbb1f5caa712c8b21bb3dd1480cd30d9"},
-    {file = "numpy-1.21.5-cp310-cp310-win_amd64.whl", hash = "sha256:cc1b30205d138d1005adb52087ff45708febbef0e420386f58664f984ef56954"},
-    {file = "numpy-1.21.5-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:08de8472d9f7571f9d51b27b75e827f5296295fa78817032e84464be8bb905bc"},
-    {file = "numpy-1.21.5-cp37-cp37m-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:4fe6a006557b87b352c04596a6e3f12a57d6e5f401d804947bd3188e6b0e0e76"},
-    {file = "numpy-1.21.5-cp37-cp37m-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:3d893b0871322eaa2f8c7072cdb552d8e2b27645b7875a70833c31e9274d4611"},
-    {file = "numpy-1.21.5-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:341dddcfe3b7b6427a28a27baa59af5ad51baa59bfec3264f1ab287aa3b30b13"},
-    {file = "numpy-1.21.5-cp37-cp37m-win32.whl", hash = "sha256:ca9c23848292c6fe0a19d212790e62f398fd9609aaa838859be8459bfbe558aa"},
-    {file = "numpy-1.21.5-cp37-cp37m-win_amd64.whl", hash = "sha256:025b497014bc33fc23897859350f284323f32a2fff7654697f5a5fc2a19e9939"},
-    {file = "numpy-1.21.5-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:3a5098df115340fb17fc93867317a947e1dcd978c3888c5ddb118366095851f8"},
-    {file = "numpy-1.21.5-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:311283acf880cfcc20369201bd75da907909afc4666966c7895cbed6f9d2c640"},
-    {file = "numpy-1.21.5-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:b545ebadaa2b878c8630e5bcdb97fc4096e779f335fc0f943547c1c91540c815"},
-    {file = "numpy-1.21.5-cp38-cp38-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:c5562bcc1a9b61960fc8950ade44d00e3de28f891af0acc96307c73613d18f6e"},
-    {file = "numpy-1.21.5-cp38-cp38-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:eed2afaa97ec33b4411995be12f8bdb95c87984eaa28d76cf628970c8a2d689a"},
-    {file = "numpy-1.21.5-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:61bada43d494515d5b122f4532af226fdb5ee08fe5b5918b111279843dc6836a"},
-    {file = "numpy-1.21.5-cp38-cp38-win32.whl", hash = "sha256:7b9d6b14fc9a4864b08d1ba57d732b248f0e482c7b2ff55c313137e3ed4d8449"},
-    {file = "numpy-1.21.5-cp38-cp38-win_amd64.whl", hash = "sha256:dbce7adeb66b895c6aaa1fad796aaefc299ced597f6fbd9ceddb0dd735245354"},
-    {file = "numpy-1.21.5-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:507c05c7a37b3683eb08a3ff993bd1ee1e6c752f77c2f275260533b265ecdb6c"},
-    {file = "numpy-1.21.5-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:00c9fa73a6989895b8815d98300a20ac993c49ac36c8277e8ffeaa3631c0dbbb"},
-    {file = "numpy-1.21.5-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:69a5a8d71c308d7ef33ef72371c2388a90e3495dbb7993430e674006f94797d5"},
-    {file = "numpy-1.21.5-cp39-cp39-manylinux_2_12_i686.manylinux2010_i686.whl", hash = "sha256:2d8adfca843bc46ac199a4645233f13abf2011a0b2f4affc5c37cd552626f27b"},
-    {file = "numpy-1.21.5-cp39-cp39-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:c293d3c0321996cd8ffe84215ffe5d269fd9d1d12c6f4ffe2b597a7c30d3e593"},
-    {file = "numpy-1.21.5-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3c978544be9e04ed12016dd295a74283773149b48f507d69b36f91aa90a643e5"},
-    {file = "numpy-1.21.5-cp39-cp39-win32.whl", hash = "sha256:2a9add27d7fc0fdb572abc3b2486eb3b1395da71e0254c5552b2aad2a18b5441"},
-    {file = "numpy-1.21.5-cp39-cp39-win_amd64.whl", hash = "sha256:1964db2d4a00348b7a60ee9d013c8cb0c566644a589eaa80995126eac3b99ced"},
-    {file = "numpy-1.21.5-pp37-pypy37_pp73-manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:a7c4b701ca418cd39e28ec3b496e6388fe06de83f5f0cb74794fa31cfa384c02"},
-    {file = "numpy-1.21.5.zip", hash = "sha256:6a5928bc6241264dce5ed509e66f33676fc97f464e7a919edc672fb5532221ee"},
     {file = "numpy-1.22.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3d62d6b0870b53799204515145935608cdeb4cebb95a26800b6750e48884cc5b"},
     {file = "numpy-1.22.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:831f2df87bd3afdfc77829bc94bd997a7c212663889d56518359c827d7113b1f"},
     {file = "numpy-1.22.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:8d1563060e77096367952fb44fca595f2b2f477156de389ce7c0ade3aef29e21"},
@@ -972,6 +969,12 @@ sortedcontainers = [
 speechrecognition = [
     {file = "SpeechRecognition-3.8.1-py2.py3-none-any.whl", hash = "sha256:4d8f73a0c05ec70331c3bacaa89ecc06dfa8d9aba0899276664cda06ab597e8e"},
 ]
+stem = [
+    {file = "stem-1.8.0.tar.gz", hash = "sha256:a0b48ea6224e95f22aa34c0bc3415f0eb4667ddeae3dfb5e32a6920c185568c2"},
+]
+tbselenium = [
+    {file = "tbselenium-0.6.2.tar.gz", hash = "sha256:51d37265a544ad70f3d3894a3c3437e954f45c288537a8be3caf05a0d4f9ff80"},
+]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
     {file = "text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8"},
@@ -983,6 +986,10 @@ toml = [
 tomli = [
     {file = "tomli-2.0.0-py3-none-any.whl", hash = "sha256:b5bde28da1fed24b9bd1d4d2b8cba62300bfb4ec9a6187a957e8ddb9434c5224"},
     {file = "tomli-2.0.0.tar.gz", hash = "sha256:c292c34f58502a1eb2bbb9f5bbc9a5ebc37bee10ffb8c2d6bbdfa8eb13cc14e1"},
+]
+tqdm = [
+    {file = "tqdm-4.62.3-py2.py3-none-any.whl", hash = "sha256:8dd278a422499cd6b727e6ae4061c40b48fce8b76d1ccbf5d34fca9b7f925b0c"},
+    {file = "tqdm-4.62.3.tar.gz", hash = "sha256:d359de7217506c9851b7869f3708d8ee53ed70a1b8edbba4dbcb47442592920d"},
 ]
 trio = [
     {file = "trio-0.19.0-py3-none-any.whl", hash = "sha256:c27c231e66336183c484fbfe080fa6cc954149366c15dc21db8b7290081ec7b8"},
